@@ -6,6 +6,7 @@ function JoinGroup() {
   const { inviteToken } = useParams();
   const navigate = useNavigate();
   const [status, setStatus] = useState('Joining group...');
+
   useEffect(() => {
     joinGroupService(inviteToken)
       .then((res) => {
@@ -21,12 +22,16 @@ function JoinGroup() {
           setStatus(
             'You are already a member of this group. Redirecting to groups page...'
           );
-          navigate('/groups');
+          setTimeout(() => {
+            navigate('/groups');
+          }, 3000);
         } else if (res.message === 'Miembro agregado') {
           setStatus(
             'Successfully joined the group! Redirecting to groups page...'
           );
-          navigate('/groups');
+          setTimeout(() => {
+            navigate('/groups');
+          }, 3000);
         }
       })
       .catch((err) => {
