@@ -28,3 +28,4 @@ eslint**
 tsconfig*
 jest.config.js
 coverage    
+package-lock.json
