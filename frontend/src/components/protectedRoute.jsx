@@ -11,3 +11,4 @@ const ProtectedRoute = ({ children }) => {
 };
 
 export default ProtectedRoute;
+// This component checks if a user is authenticated by looking for a token in localStorage. If the token exists, it renders the child components; otherwise, it redirects the user to the login page.
