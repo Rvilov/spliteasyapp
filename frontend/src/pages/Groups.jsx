@@ -21,7 +21,7 @@ function Groups() {
 
   useEffect(() => {
     groupsService()
-      .then((res) => setGroups(res.grupos))
+      .then((res) => setGroups(res.grupos ?? []))
       .catch((err) => console.log(err));
   }, [refresh]);
 
