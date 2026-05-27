@@ -25,7 +25,7 @@ function JoinGroup() {
           setTimeout(() => {
             navigate('/groups');
           }, 3000);
-        } else if (res.message === 'Miembro agregado') {
+        } else if (res.message === 'Te uniste al grupo') {
           setStatus(
             'Successfully joined the group! Redirecting to groups page...'
           );
