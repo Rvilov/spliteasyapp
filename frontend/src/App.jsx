@@ -9,7 +9,7 @@ import JoinGroup from './pages/JoinGroup.jsx';
 function App() {
   const navigate = useNavigate();
   return (
-    <div className="he">
+    <div>
       <Routes>
         <Route
           path="/"

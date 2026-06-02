@@ -29,7 +29,7 @@ function Login() {
           <input
             className="focus:outline-1 focus:outline-gray-700  rounded-lg p-2 w-80 bg-[#1A1C20] placeholder-gray-500 text-white"
             type="email"
-            placeholder="Emai@ejemplo.com"
+            placeholder="Email@ejemplo.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             id="email"
@@ -47,7 +47,7 @@ function Login() {
           />
         </div>
         <input
-          className="bg-[#00D1FF] w-70 rounded-lg h-20 text-2xl hover:scale-105 transition-all duration-300"
+          className="bg-[#00D1FF] w-70 rounded-lg h-20 text-2xl hover:scale-105 transition-all duration-300 active:scale-95 active:bg-[#00D1FF]/80 cursor-pointer"
           type="button"
           value="Iniciar Sesion"
           onClick={() => handleLogin(email, password)}
