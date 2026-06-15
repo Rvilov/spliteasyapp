@@ -190,7 +190,7 @@ export const saldarDeuda = async (req, res, next) => {
     const { groupId, settlementId } = req.params;
 
     const settlementResult = await pool.query(
-      "SELECT * FROM settlements WHERE id = $1 AND group_id = $2",
+      "SELECT * FROM settlements WHERE id = $1 AND group_id = $2 AND paid = false",
       [settlementId, groupId],
     );
 
@@ -276,7 +276,7 @@ export const verMiembrosGrupo = async (req, res, next) => {
   try {
     const { groupId } = req.params;
     const verMiembrosGrupoResult = await pool.query(
-      "SELECT members.user_id , users.name FROM members JOIN users ON members.user_id = users.id WHERE group_id = $1",
+      "SELECT members.user_id , users.name , groups.name as group_name FROM members JOIN users ON members.user_id = users.id JOIN groups ON members.group_id = groups.id WHERE group_id = $1",
       [groupId],
     );
 

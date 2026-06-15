@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 
 import { groupsService, createGroupService } from '../services/group.services';
-import Nav from '../components/Nav';
+
 import GrupoCard from '../components/GrupoCard';
 
 function Groups() {
@@ -36,8 +36,9 @@ function Groups() {
       gap-4
     "
     >
-      <Nav />
-      <h2 className="text-white text-2xl font-bold w-full px-5">Tus grupos</h2>
+      <h2 className="text-white text-2xl font-bold w-full px-5 mt-5">
+        Tus grupos
+      </h2>
       <div className="text-white flex flex-row flex-wrap justify-around items-center w-screen h-auto">
         <div className=" flex flex-col justify-around items-center rounded-lg p-4 min-w-70 min-h-40 max-w-140 max-h-80 m-4 bg-[#1a1e20] glass-card">
           <input

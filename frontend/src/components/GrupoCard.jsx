@@ -20,7 +20,7 @@ function GrupoCard({ name, id }) {
     >
       <h3 className="text-white text-xl font-bold max-w-50 truncate">{name}</h3>
 
-      <p className="text-gray-400">Miembros: {members.length + 1}</p>
+      <p className="text-gray-400">Miembros: {members.length}</p>
       <input
         type="button"
         value="Ver Grupo"
