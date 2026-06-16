@@ -96,44 +96,8 @@ export const registrarGasto = async (req, res, next) => {
         "INSERT INTO expenses ( description, amount, user_id,group_id ) VALUES ($1,$2,$3,$4)",
         [req.body.description, req.body.amount, id, groupId],
       );
-      const groupMembers = await pool.query(
-        "SELECT COUNT(*) FROM members WHERE group_id = $1",
-        [groupId],
-      );
 
-      const expenses = await pool.query(
-        `SELECT members.user_id, users.name, COALESCE(SUM(amount),0) as sum FROM members LEFT JOIN expenses ON members.user_id = expenses.user_id AND expenses.group_id = $1 LEFT JOIN users ON members.user_id = users.id WHERE members.group_id = $1 GROUP BY members.user_id, users.name`,
-        [groupId],
-      );
-
-      const totalGastos = expenses.rows.reduce(
-        (acc, expense) => acc + parseFloat(expense.sum),
-        0,
-      );
-
-      const balance = expenses.rows.map((expense) => {
-        return {
-          user_id: expense.user_id,
-          name: expense.name,
-          balance:
-            parseFloat(expense.sum) -
-            totalGastos / parseFloat(groupMembers.rows[0].count),
-        };
-      });
-      const deudas = calcularDeudaMinima(balance);
-
-      await pool.query("DELETE FROM settlements WHERE group_id = $1", [
-        groupId,
-      ]);
-
-      for (const deuda of deudas) {
-        const settlementID = await pool.query(
-          "INSERT INTO settlements (user_creditor_id , user_debtor_id , amount , group_id , paid) VALUES ($1,$2,$3,$4,$5) RETURNING ID",
-          [deuda.to_id, deuda.from_id, deuda.amount, groupId, false],
-        );
-        deuda.id = settlementID.rows[0].id;
-      }
-
+      await recalcularSettlements(groupId);
       res.status(200).json({ message: "Gasto agregado" });
     }
   } catch (err) {
@@ -197,10 +161,26 @@ export const saldarDeuda = async (req, res, next) => {
     if (settlementResult.rows.length <= 0) {
       res.status(400).json({ message: "Deuda no existe" });
     } else {
+      const settlement = settlementResult.rows[0];
+
+      await pool.query(
+        `INSERT INTO payments 
+   (group_id, from_user_id, to_user_id, amount, settlement_id)
+   VALUES ($1, $2, $3, $4, $5)`,
+        [
+          groupId,
+          settlement.user_debtor_id,
+          settlement.user_creditor_id,
+          settlement.amount,
+          settlement.id,
+        ],
+      );
+
       await pool.query("UPDATE settlements SET paid = true WHERE id = $1", [
         settlementId,
       ]);
 
+      await recalcularSettlements(groupId);
       res.status(200).json({ message: "Deuda saldada" });
     }
   } catch (err) {
@@ -323,4 +303,60 @@ function calcularDeudaMinima(balance, groupId) {
   }
 
   return deuda;
+}
+
+async function recalcularSettlements(groupId) {
+  try {
+    const groupMembers = await pool.query(
+      "SELECT COUNT(*) FROM members WHERE group_id = $1",
+      [groupId],
+    );
+
+    const expenses = await pool.query(
+      `SELECT members.user_id, users.name, COALESCE(SUM(amount),0) as sum FROM members LEFT JOIN expenses ON members.user_id = expenses.user_id AND expenses.group_id = $1 LEFT JOIN users ON members.user_id = users.id WHERE members.group_id = $1 GROUP BY members.user_id, users.name`,
+      [groupId],
+    );
+    const totalGastos = expenses.rows.reduce(
+      (acc, expense) => acc + parseFloat(expense.sum),
+      0,
+    );
+    const payments = await pool.query(
+      "SELECT from_user_id , to_user_id , amount FROM payments WHERE group_id = $1",
+      [groupId],
+    );
+
+    const balance = expenses.rows.map((expense) => {
+      const totalRecibido = payments.rows
+        .filter((payment) => payment.to_user_id === expense.user_id)
+        .reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
+
+      const totalEnviado = payments.rows
+        .filter((payment) => payment.from_user_id === expense.user_id)
+        .reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
+
+      return {
+        user_id: expense.user_id,
+        name: expense.name,
+        balance:
+          parseFloat(expense.sum) -
+          totalGastos / parseFloat(groupMembers.rows[0].count) -
+          totalRecibido +
+          totalEnviado,
+      };
+    });
+
+    const deudas = calcularDeudaMinima(balance);
+    await pool.query(
+      "DELETE FROM settlements WHERE group_id = $1 AND paid = false",
+      [groupId],
+    );
+    for (const deuda of deudas) {
+      await pool.query(
+        "INSERT INTO settlements (user_creditor_id, user_debtor_id, amount, group_id, paid) VALUES ($1,$2,$3,$4,$5)",
+        [deuda.to_id, deuda.from_id, deuda.amount, groupId, false],
+      );
+    }
+  } catch (err) {
+    next(err);
+  }
 }

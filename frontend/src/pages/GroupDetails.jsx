@@ -92,13 +92,14 @@ function GroupDetail() {
 
   return (
     <div
-      className="text-white w-full h-full bg-[radial-gradient(circle_at_20%_30%,rgba(76,214,255,0.08)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(157,80,187,0.08)_0%,transparent_50%)]
+      className="text-white w-full h-full 
       flex
       flex-col
       items-left
       justify-start
       gap-4"
     >
+      <div className="aurora-glow "></div>
       <div className="w-full flex flex-row items-center justify-between gap-2 px-25">
         <div id="group-info" className=" flex flex-col items-start gap-1">
           <h1 className="text-2xl font-bold  text-[#00D1FF]">{groupName}</h1>
@@ -118,7 +119,7 @@ function GroupDetail() {
                 height="18"
                 viewBox="0 0 24 24"
                 fill="currentColor"
-                class="icon icon-tabler icons-tabler-filled icon-tabler-link"
+                className="icon icon-tabler icons-tabler-filled icon-tabler-link"
               >
                 <path stroke="none" d="M0 0h24v24H0z" fill="none" />
                 <path d="M15.707 8.293a1 1 0 0 1 0 1.414l-6 6a1 1 0 1 1 -1.414 -1.414l6 -6a1 1 0 0 1 1.414 0" />

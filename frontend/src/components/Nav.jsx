@@ -45,10 +45,10 @@ function Nav() {
             Grupos
           </a>
         </div>
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-4 ">
           <div
             id="search"
-            className="flex items-center bg-[#2A2C30] h-10 w-64 border border-gray-700 rounded-md p-4 "
+            className="flex items-center bg-[#2A2C30] h-10 w-64 border border-gray-700 rounded-md p-4  "
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -57,9 +57,9 @@ function Nav() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="2"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               className="icon icon-tabler icons-tabler-outline icon-tabler-search text-gray-400 mr-4"
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />
@@ -78,9 +78,9 @@ function Nav() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="1"
-              stroke-linecap="round"
-              stroke-linejoin="round"
+              strokeWidth="1"
+              strokeLinecap="round"
+              strokeLinejoin="round"
               className="icon icon-tabler icons-tabler-outline icon-tabler-user-circle text-gray-400 mr-4 size-8"
             >
               <path stroke="none" d="M0 0h24v24H0z" fill="none" />

@@ -28,3 +28,13 @@ CREATE TABLE settlements(
   user_debtor_id INTEGER REFERENCES users(id),
   amount NUMERIC(10,2)
 );
+
+CREATE TABLE payments (
+  id SERIAL PRIMARY KEY,
+  group_id INTEGER NOT NULL REFERENCES groups(id),
+  from_user_id INTEGER NOT NULL REFERENCES users(id),
+  to_user_id INTEGER NOT NULL REFERENCES users(id),
+  amount NUMERIC(10, 2) NOT NULL,
+  settlement_id INTEGER REFERENCES settlements(id),
+  created_at TIMESTAMP DEFAULT NOW()
+);

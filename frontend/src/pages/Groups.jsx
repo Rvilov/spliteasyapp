@@ -28,7 +28,7 @@ function Groups() {
 
   return (
     <div
-      className="w-full h-screen bg-[radial-gradient(circle_at_20%_30%,rgba(76,214,255,0.08)_0%,transparent_50%),radial-gradient(circle_at_80%_70%,rgba(157,80,187,0.08)_0%,transparent_50%)]
+      className=" w-full h-screen 
       flex
       flex-col
       items-left
@@ -36,6 +36,7 @@ function Groups() {
       gap-4
     "
     >
+      <div className="aurora-glow "></div>
       <h2 className="text-white text-2xl font-bold w-full px-5 mt-5">
         Tus grupos
       </h2>
